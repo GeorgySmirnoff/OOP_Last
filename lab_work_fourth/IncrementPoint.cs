@@ -53,13 +53,14 @@ namespace Lab4_Backup
                 }
             }
 
+            //Из текущего списка файлов убираем файлы которые уже есть в бекапе -> получаем список новых файлов
             var newFiles = filePaths.Except(files.Select(t => t.FilePath));
             foreach (var item in newFiles)
                 newFileBackupInfos.Add(CreateFileBackupInfo(item));
-
+            //Из списка файлов бекапа убираем текущие файлы -> получаем список новых файлов
             var deleteFiles = files.Select(t => t.FilePath).Except(filePaths);
             foreach (var item in deleteFiles)
-                newFileBackupInfos.Add(CreateFileBackupInfo(item));
+                deleteFileBackupInfos.Add(CreateFileBackupInfo(item));
 
             //получить измененные
             foreach (var item in filePaths)

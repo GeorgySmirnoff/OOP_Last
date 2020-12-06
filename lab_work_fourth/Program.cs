@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Lab4_Backup.ClearAlgorythm;
+using Lab4_Backup.CopyAlgorytms;
 
 namespace Lab4_Backup
 {
@@ -15,7 +16,7 @@ namespace Lab4_Backup
             string[] filePaths = { @"Files\FileIn.txt", @"Files\Input.txt" };
 
             TimeManager.Instance.CurrentDate = new DateTime(2020, 10, 10, 12, 0, 0);
-            Backup backup = new Backup(filePaths);
+            Backup backup = new Backup(filePaths, new FileCopySeparateAlgorithm("C:\\data"));
             FullPoint restorePoint1 = (FullPoint)backup.CreateRestore(true);
             Console.WriteLine($"Expected 2 files. Actual {restorePoint1.FileBackupInfos.Count} files");
 
@@ -35,7 +36,7 @@ namespace Lab4_Backup
             string[] filePaths = { @"Files\FileIn.txt", @"Files\Input.txt" };
 
             TimeManager.Instance.CurrentDate = new DateTime(2020, 10, 10, 12, 0, 0);
-            Backup backup = new Backup(filePaths);
+            Backup backup = new Backup(filePaths, new FileCopySeparateAlgorithm("C:\\data"));
             FullPoint restorePoint1 = (FullPoint)backup.CreateRestore(true);
 
             TimeManager.Instance.CurrentDate = new DateTime(2020, 10, 12, 12, 0, 0);
@@ -51,7 +52,6 @@ namespace Lab4_Backup
 
         static void Main(string[] args)
         {
-            //Case1();
             Case2();
 
             Console.ReadLine();

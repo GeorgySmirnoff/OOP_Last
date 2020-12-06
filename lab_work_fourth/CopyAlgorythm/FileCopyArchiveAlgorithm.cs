@@ -8,9 +8,16 @@ namespace Lab4_Backup.CopyAlgorytms
 {
     public class FileCopyArchiveAlgorithm : IFileCopyCreateAlgorithm
     {
+        private string nameArchive;
+
+        public FileCopyArchiveAlgorithm(string nameArchive)
+        {
+            this.nameArchive = nameArchive;
+        }
+
         public void CreateFor(Backup backup)
         {
-            throw new NotImplementedException();
+
         }
     }
 }

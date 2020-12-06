@@ -47,9 +47,10 @@ namespace Lab4_Backup
         {
             foreach (var item in filePaths)
             {
+                //если это файл то добавляем его
                 if (File.Exists(item))
                     fileBackupInfos.Add(CreateFileBackupInfo(item));
-                else
+                else //если папка
                 {
                     string[] files = Directory.GetFiles(item, "*.*", SearchOption.AllDirectories);
                     foreach (var file in files)
@@ -60,6 +61,6 @@ namespace Lab4_Backup
             }
         }
 
-        
+
     }
 }

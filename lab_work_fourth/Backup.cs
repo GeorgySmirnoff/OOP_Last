@@ -1,6 +1,8 @@
 ﻿using Lab4_Backup.ClearAlgorythm;
+using Lab4_Backup.CopyAlgorytms;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +16,7 @@ namespace Lab4_Backup
 
         private List<string> filePaths = new List<string>();
         private List<FullPoint> restorePoints = new List<FullPoint>();
+        private IFileCopyCreateAlgorithm fileCopyCreateAlgorithm;
 
         public long Size
         {
@@ -34,12 +37,13 @@ namespace Lab4_Backup
             }
         }
 
-        public Backup(string[] filePaths)
+        public Backup(string[] filePaths, IFileCopyCreateAlgorithm fileCopyCreateAlgorithm)
         {
             this.filePaths.AddRange(filePaths);
 
             Id = Guid.NewGuid();
             CreationTime = DateTime.Now;
+            this.fileCopyCreateAlgorithm = fileCopyCreateAlgorithm;
         }
 
         public void Add(string filePath)
@@ -54,11 +58,14 @@ namespace Lab4_Backup
 
         public RestorePoint CreateRestore(bool isfullPoint)
         {
+            UpdateFileList();
+
             if (isfullPoint)
             {
                 FullPoint restorePoint = new FullPoint(filePaths);
                 restorePoints.Add(restorePoint);
 
+                fileCopyCreateAlgorithm.CreateFor(this);
                 return restorePoint;
             }
             else
@@ -66,16 +73,31 @@ namespace Lab4_Backup
                 if (restorePoints.Count == 0)
                     throw new ArgumentException("Прежде чем создать инкрементальную точку нужно чтобы была полная точка");
 
-                FullPoint fullPoint = (FullPoint)restorePoints.Last();
+                FullPoint fullPoint = restorePoints.Last();
                 IncrementPoint restorePoint = new IncrementPoint(fullPoint, filePaths);
                 fullPoint.IncrementPoints.Add(restorePoint);
+
+                fileCopyCreateAlgorithm.CreateFor(this);
                 return restorePoint;
             }
+
         }
 
         public TypeResult Clear(IClearPoint clearPoint)
         {
             return clearPoint.Execute(restorePoints);
+        }
+
+        private void UpdateFileList()
+        {
+            for (int i = 0; i < filePaths.Count; i++)
+            {
+                if (!File.Exists(filePaths[i]))
+                {
+                    filePaths.RemoveAt(i);
+                    i--;
+                }
+            }
         }
     }
 }
