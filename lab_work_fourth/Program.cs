@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Lab4_Backup.ClearAlgorythm;
 using Lab4_Backup.CopyAlgorytms;
+using Lab4_Backup.CreatePointAlgorythm;
 
 namespace Lab4_Backup
 {
@@ -17,11 +18,11 @@ namespace Lab4_Backup
 
             TimeManager.Instance.CurrentDate = new DateTime(2020, 10, 10, 12, 0, 0);
             Backup backup = new Backup(filePaths, new FileCopySeparateAlgorithm("C:\\data"));
-            FullPoint restorePoint1 = (FullPoint)backup.CreateRestore(true);
+            FullPoint restorePoint1 = (FullPoint)backup.CreateRestore(new CreateFullPointAlgorithm());
             Console.WriteLine($"Expected 2 files. Actual {restorePoint1.FileBackupInfos.Count} files");
 
             TimeManager.Instance.CurrentDate = new DateTime(2020, 10, 12, 12, 0, 0);
-            FullPoint restorePoint2 = (FullPoint)backup.CreateRestore(true);
+            FullPoint restorePoint2 = (FullPoint)backup.CreateRestore(new CreateFullPointAlgorithm());
 
             Console.WriteLine($"Before clear {backup.RestorePoints.Count}");
 
@@ -37,10 +38,10 @@ namespace Lab4_Backup
 
             TimeManager.Instance.CurrentDate = new DateTime(2020, 10, 10, 12, 0, 0);
             Backup backup = new Backup(filePaths, new FileCopySeparateAlgorithm("C:\\data"));
-            FullPoint restorePoint1 = (FullPoint)backup.CreateRestore(true);
+            FullPoint restorePoint1 = (FullPoint)backup.CreateRestore(new CreateFullPointAlgorithm());
 
             TimeManager.Instance.CurrentDate = new DateTime(2020, 10, 12, 12, 0, 0);
-            FullPoint restorePoint2 = (FullPoint)backup.CreateRestore(true);
+            FullPoint restorePoint2 = (FullPoint)backup.CreateRestore(new CreateFullPointAlgorithm());
 
             Console.WriteLine($"Count points = {backup.RestorePoints.Count}, Size = {backup.Size}");
 

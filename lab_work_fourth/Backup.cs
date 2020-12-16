@@ -23,7 +23,7 @@ namespace Lab4_Backup
         {
             get
             {
-            return restorePoints.Sum(item => item.Size);
+               return restorePoints.Sum(item => item.Size);
             }
         }
 

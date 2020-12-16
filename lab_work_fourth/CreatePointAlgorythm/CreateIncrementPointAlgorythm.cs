@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lab4_Backup.CreatePointAlgorythm
 {
-    public class CreateIncrementPointAlgorithm : ICreatePointAlgorithm
+    public class CreateIncrementPointAlgorithm : ICreatePointAlgorythm
     {
         public RestorePoint Create(List<FullPoint> fullPoints, List<string> filePaths)
         {
