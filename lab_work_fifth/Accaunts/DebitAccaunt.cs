@@ -1,23 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace lab_work_fifth
 {
     public class DebitAccount : Account
     {
-        public DebitAccount(string number, decimal balance = 0) : base(number, balance)
+        public DebitAccount(string number, Bank bank, decimal balance = 0) : base(number, bank, balance)
         {
-
-        }
-        public override void Put(decimal money)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Transfer(Account accaunt)
-        {
-            throw new NotImplementedException();
+            percentRest = bank.DebitPercentRest.CalcPercentRest(this);
         }
 
         public override void Withdraw(decimal money)
@@ -25,7 +18,8 @@ namespace lab_work_fifth
             if (money > balance)
                 throw new ArgumentException("Недостаточно средств");
 
-            balance -= money;
+            base.Withdraw(money);
         }
     }
 }
+
