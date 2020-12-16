@@ -1,5 +1,6 @@
 ﻿using Lab4_Backup.ClearAlgorythm;
 using Lab4_Backup.CopyAlgorytms;
+using Lab4_Backup.CreatePointAlgorythm;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,20 +23,11 @@ namespace Lab4_Backup
         {
             get
             {
-                long size = 0;
-                foreach (var item in restorePoints)
-                    size += item.Size;
-                return size;
+            return restorePoints.Sum(item => item.Size);
             }
         }
 
-        public List<FullPoint> RestorePoints
-        {
-            get
-            {
-                return restorePoints;
-            }
-        }
+        public List<FullPoint> RestorePoints { get; }
 
         public Backup(string[] filePaths, IFileCopyCreateAlgorithm fileCopyCreateAlgorithm)
         {
@@ -56,31 +48,13 @@ namespace Lab4_Backup
             filePaths.Remove(filePath);
         }
 
-        public RestorePoint CreateRestore(bool isfullPoint)
+        public RestorePoint CreateRestore(ICreatePointAlgorythm createPointAlgorithm)
         {
             UpdateFileList();
 
-            if (isfullPoint)
-            {
-                FullPoint restorePoint = new FullPoint(filePaths);
-                restorePoints.Add(restorePoint);
-
-                fileCopyCreateAlgorithm.CreateFor(this);
-                return restorePoint;
-            }
-            else
-            {
-                if (restorePoints.Count == 0)
-                    throw new ArgumentException("Прежде чем создать инкрементальную точку нужно чтобы была полная точка");
-
-                FullPoint fullPoint = restorePoints.Last();
-                IncrementPoint restorePoint = new IncrementPoint(fullPoint, filePaths);
-                fullPoint.IncrementPoints.Add(restorePoint);
-
-                fileCopyCreateAlgorithm.CreateFor(this);
-                return restorePoint;
-            }
-
+            RestorePoint point = createPointAlgorithm.Create(restorePoints, filePaths);
+            fileCopyCreateAlgorithm.CreateFor(this);
+            return point;
         }
 
         public TypeResult Clear(IClearPoint clearPoint)

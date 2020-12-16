@@ -8,11 +8,11 @@ namespace Lab4_Backup.ClearAlgorythm
 {
     public class ClearPointByCount : IClearPoint
     {
-        private int n;
+        private int count;
 
-        public ClearPointByCount(int n)
+        public ClearPointByCount(int count)
         {
-            this.n = n;
+            this.count = count;
         }
 
         public TypeResult Execute(List<FullPoint> restorePoints)
@@ -23,7 +23,7 @@ namespace Lab4_Backup.ClearAlgorythm
             {
                 countTotal += 1 + restorePoints[i].IncrementPoints.Count;
 
-                if (countTotal >= n)
+                if (countTotal >= count)
                 {
                     for (int j = 0; j < i; j++)
                     {
@@ -33,9 +33,9 @@ namespace Lab4_Backup.ClearAlgorythm
                 }
             }
 
-            if (countTotal == n)
+            if (countTotal == count)
                 return TypeResult.Success;
-            else if (countTotal > n)
+            else if (countTotal > count)
                 return TypeResult.Warning;
             return TypeResult.Error;
         }
